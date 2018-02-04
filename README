@@ -1,0 +1,30 @@
+NAME
+
+        ViewPort.h - render text on limited viewports
+
+SYNOPSIS
+
+    TODO
+
+DESCRIPTION
+
+    TODO
+
+EXAMPLES
+
+ examples/Arduino_scroll/Arduino_scroll.ino
+
+    Arduino display ViewPort with text scrolling.
+
+ examples/term_scroll/
+
+    Linux terminal ViewPort with text scrolling.
+
+LICENSE
+
+    This is free software, licensed under the MIT License.
+
+AUTHOR
+
+        Jozef Kutej
+
