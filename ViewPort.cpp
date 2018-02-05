@@ -75,55 +75,56 @@ void ViewPort::refresh() {
 
     for (uint8_t row = 0; row < dmaxy; row++) {
         set_cursor(0,row);
+
+        if (!cur_line) {
+            for (uint8_t col = 0; col < dmaxx; col++) {
+                print(' ');
+            }
+            continue;
+        }
+
         uint8_t row_text_width = 0;
         uint8_t row_padding = 0;
-        
-        const char* text = 0;
-        if (cur_line) {
-            text = cur_line->line;
-            if (cur_line->align == align_right) {
-                row_padding = text_width - strlen(text);
+
+        const char* text = cur_line->line;
+        if (cur_line->align == align_right) {
+            row_padding = text_width - strlen(text);
+        }
+        else if (cur_line->align == align_center) {
+            row_padding = (text_width - strlen(text)) / 2;
+        }
+        for (uint8_t col = 0; col < vx_offset; col++) {
+            if (!text[0]) break;
+            if (row_padding) {
+                row_padding--;
             }
-            else if (cur_line->align == align_center) {
-                row_padding = (text_width - strlen(text)) / 2;
+            else {
+                text++;
             }
-            for (uint8_t col = 0; col < vx_offset; col++) {
-                if (text[0] == 0) break;
-                if (row_padding) {
-                    row_padding--;
-                }
-                else {
-                    text++;
-                }
-                row_text_width++;
-            }
+            row_text_width++;
         }
 
         for (uint8_t col = 0; col < dmaxx; col++) {
             char ch = ' ';
-            if (cur_line) {
-                if (row_padding) {
-                    row_padding--;
-                }
-                else if (text && (text[0] != 0)) {
-                    ch = text[0];
-                    text++;
-                    row_text_width++;
-                }
+            if (row_padding) {
+                row_padding--;
             }
-            print(ch);
-        }
-        
-        if (cur_line) {
-            while (text[0] != 0) {
+            else if (text && text[0]) {
+                ch = text[0];
                 text++;
                 row_text_width++;
             }
-            if (row_text_width > text_width) text_width = row_text_width;
-
-            cur_line = cur_line->next;
-            text_height++;
+            print(ch);
         }
+
+        while (text[0]) {
+            text++;
+            row_text_width++;
+        }
+        if (row_text_width > text_width) text_width = row_text_width;
+
+        cur_line = cur_line->next;
+        text_height++;
     }
 
     while (cur_line) {
@@ -131,6 +132,6 @@ void ViewPort::refresh() {
         if (row_text_width > text_width) text_width = row_text_width;
 
         cur_line = cur_line->next;
-        text_height++;        
+        text_height++;
     }
 }
