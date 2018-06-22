@@ -4,34 +4,23 @@
 #include <stdint.h>
 #include <string.h>
 
-ViewPort_line::ViewPort_line(const char* l, text_align a, ViewPort_line* n) {
-    line = l;
-    align = a;
-    next = n;
-}
+ViewPort_line::ViewPort_line(const char* l, text_align a, ViewPort_line* n)
+    : line(l), align(a), next(n) {}
 
-ViewPort::ViewPort(uint8_t dx, uint8_t dy, void (*sc)(uint8_t x, uint8_t y), void (*pr)(char ch)) {
-    first_line = 0;
-    vx_offset = 0;
-    vy_offset = 0;
-    dmaxx = dx;
-    dmaxy = dy;
-    set_cursor = sc;
-    print = pr;
-    text_width = dx;
-    text_height = dy;
-}
+ViewPort::ViewPort(uint8_t dx, uint8_t dy, void (*sc)(uint8_t x, uint8_t y), void (*pr)(char ch))
+    : first_line(nullptr), vx_offset(0), vy_offset(0), dmaxx(dx), dmaxy(dy), set_cursor(sc), print(pr),
+      text_width(dx), text_height(dy) {}
 
 void ViewPort::append_line(ViewPort_line* line) {
     ViewPort_line** last_line = &first_line;
-    while (*last_line != 0) {
+    while (*last_line != nullptr) {
         last_line = &((*last_line)->next);
     }
     (*last_line) = line;
 }
 
 void ViewPort::clear() {
-    first_line = 0;
+    first_line = nullptr;
     refresh();
 }
 

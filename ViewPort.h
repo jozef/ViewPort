@@ -2,13 +2,18 @@
 #ifndef ViewPort_h
 #define ViewPort_h
 
+// Arduino is missing nullptr
+#ifndef nullptr
+#define nullptr 0
+#endif
+
 #include <stdint.h>
 
 enum text_align { align_left, align_center, align_right };
 
 class ViewPort_line {
     public:
-        ViewPort_line(const char* l, text_align a = align_left, ViewPort_line* n = 0);
+        ViewPort_line(const char* l, text_align a = align_left, ViewPort_line* n = nullptr);
         const char* line;
         text_align align;
         ViewPort_line* next;
